@@ -5,7 +5,7 @@ var express = require("express"),
 
 var scrapedData = function (res) {
 	
-	request("https://www.nytimes.com", function (err, response, html) {
+	request("https://www.nytimes.com", function (error, response, html) {
 	    var $ = cheerio.load(html);
 
 	    var result = [];

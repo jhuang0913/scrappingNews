@@ -1,5 +1,5 @@
 var express = require("express"),
-    routes = express.Router()
+    routes = express.Router(),
     request = require("request"),
     cheerio = require("cheerio");
 
@@ -53,11 +53,11 @@ routes.get("/", function (req, res) {
 
 
 routes.get("/articles", function (req, res) {
-    Article.find({saved: false}, function (err, doc) {
+    Article.find({saved: false}, function (err, req) {
         if(err) throw err;
         else{
             //console.log(doc);
-            res.render("articles", {result:doc});
+            res.render("articles", {result:req});
         }
     });
 });
@@ -68,9 +68,9 @@ routes.get("/articles/:id", function (req, res) {
        "_id": req.params.id
    })
        .populate("note")
-       .exec(function (err, doc) {
+       .exec(function (err, req) {
            if(err)throw err;
-           res.json(doc);
+           res.json(req);
        });
 
 
@@ -79,17 +79,17 @@ routes.get("/articles/:id", function (req, res) {
 routes.get("/saved", function (err, res) {
     Article.find({
         saved: true
-    }, function (err, doc) {
+    }, function (err, req) {
         if(err) throw err;
-        res.render("saved", {data: doc});
+        res.render("saved", {data: req});
 
     });
 });
 
 routes.get("api/saved", function (req, res) {
-    Article.find({saved: true}, function (err, doc) {
-        if(err) throw err;
-        res.json(doc);
+    Article.find({saved: true}, function (error, req) {
+        if(error) throw err;
+        res.json(req);
     });
 });
 
@@ -97,7 +97,7 @@ routes.get("api/saved", function (req, res) {
 routes.post("/saved/:id", function (req, res) {
     var id = req.params.id;
     console.log(id);
-    Article.findOneAndUpdate({"_id": id}, {saved: true}, function (err, doc) {
+    Article.findOneAndUpdate({"_id": id}, {saved: true}, function (err, req) {
         if(err) throw err;
         res.redirect("/articles");
 
@@ -107,12 +107,12 @@ routes.post("/saved/:id", function (req, res) {
 routes.post("/articles/:id", function (req, res) {
     var newNote = new Note(req.body);
     console.log(newNote);
-    newNote.save(function (err, doc) {
+    newNote.save(function (err, req) {
         if(err) throw err;
-        Article.findOneAndUpdate({"_id": req.params.id}, {"note": doc._id})
-            .exec(function (err, doc) {
+        Article.findOneAndUpdate({"_id": req.params.id}, {"note": req._id})
+            .exec(function (err, req) {
                 if(err) throw err;
-                console.log("Data has successfully inserted into the Note!!");
+                console.log("Note Added!");
                 res.redirect("/saved");
 
             });
