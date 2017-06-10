@@ -21,8 +21,7 @@ app.use(bodyParser.urlencoded({
 
 
 if(process.env.MONGODB_URI){
-    mongoose.connect(mongodb://heroku_brsh2vlc:s4gg854oa9e0nt44rqiq7l203e@ds011241.mlab.com:11241/hero
-ku_brsh2vlc);
+    mongoose.connect(process.env.MONGODB_URI);
 } else{
     mongoose.connect("mongodb://localhost/nytimes");
 }
